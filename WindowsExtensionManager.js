@@ -50,6 +50,12 @@ class WindowsExtensionManager extends ExtensionManager {
     return key;
   }
 
+  async _retrieveIconAsBase64DataUri(iconPath) {
+    const ext = path.extname(iconPath).substr(1);
+    const base64 = await fs.readFile(iconPath, { encoding: "base64" });
+    return `data:image/${ext};base64,${base64}`;
+  }
+
   async listExtensions() {
     const extensionIds = await fs.readdir(this._extensionDir);
     return Promise.all(
@@ -72,10 +78,22 @@ class WindowsExtensionManager extends ExtensionManager {
           );
         }
 
+        const iconSrc = manifest["icons"]
+          ? await this._retrieveIconAsBase64DataUri(
+              path.join(
+                this._extensionDir,
+                id,
+                versionFolder,
+                manifest["icons"]["128"]
+              )
+            )
+          : "";
+
         return {
           name: manifest["name"],
           version: manifest["version"],
-          id: id
+          id: id,
+          iconSrc: iconSrc
         };
       })
     );
