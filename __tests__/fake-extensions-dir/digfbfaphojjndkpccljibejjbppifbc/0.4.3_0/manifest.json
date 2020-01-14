@@ -1,0 +1,30 @@
+{
+   "background": {
+      "page": "background.html"
+   },
+   "browser_action": {
+      "default_icon": {
+         "128": "img/icon-128.png",
+         "19": "img/icon-19.png",
+         "38": "img/icon-38.png",
+         "512": "img/icon-512.png"
+      },
+      "default_popup": "popup.html",
+      "default_title": "Moesif Origins & CORS Changer"
+   },
+   "content_security_policy": "default-src 'self'; script-src 'self'; connect-src https://www.moesif.com http://www.moesif.com https://moesif.us14.list-manage.com http://moesif.us14.list-manage.com http://*.hsforms.com https://*.hsforms.com; style-src * 'unsafe-inline'; img-src 'self' data:; font-src 'self' https://fonts.gstatic.com/;",
+   "description": "This plugin allows you to send cross-domain requests. You can also override Request Origin and CORS headers.",
+   "icons": {
+      "128": "img/icon-128.png",
+      "16": "img/icon-16.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqk1g719bYgKyouwXKyYMVZ9S3GjkDUGIuF4CjsqmGQlRRaN0AuiSP6XkJdb5c6DzabYE50yQpJxh1zbzt44GxivaBDnf3WwUeeAWsJ8HUcjrcytDyGzNjEh7w3HKoqaLukVDKATXWaFipiPdvDZ3oCfMf1z1dslco5p1spcRWygo/LNSdorg9FajxZFCpMbOs3cHMl26zLNYBW04Z6enrwTCHJUFk6YtdZocePTKHcvUYukTMSgVpPeyUFREbBiy33BsaiVq40zv+70mHyUD5OWJnhHo7X931+y1qlICA31SZ1eQgpqYv682+lce2Z9MQstNng6riThvp/eHKzkAJQIDAQAB",
+   "manifest_version": 2,
+   "name": "Moesif Orign & CORS Changer",
+   "options_ui": {
+      "page": "options.html"
+   },
+   "permissions": [ "webRequest", "\u003Call_urls>", "webRequestBlocking" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "0.4.3"
+}

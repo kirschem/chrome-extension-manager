@@ -1,23 +1,25 @@
 {
-  "name": "electron-quick-start",
+  "name": "chrome-extension-manager",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "description": "A tool to disable chrome extensions locally, without affecting sychronization to other devices.",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "test": "node --harmony ./node_modules/jest/bin/jest.js"
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/kirschem/chrome-extension-manager",
   "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "disable",
+    "manage",
+    "local",
+    "chrome",
+    "extensions"
   ],
-  "author": "GitHub",
+  "author": "Marcel Kirsche",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^7.1.7"
+    "electron": "^7.1.7",
+    "jest": "^24.9.0"
   },
   "dependencies": {
     "bootstrap": "^4.4.1",
