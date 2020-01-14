@@ -23,13 +23,13 @@ ipcRenderer.on("extensions", (event, data) => {
   }, "");
 
   const tableHtml = `
-    <table>
+    <table class="table">
       <thead>
-        <th></th>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Version</th>
-        <th>Disable on this machine</th>
+        <th class="border-top-0"></th>
+        <th class="border-top-0">ID</th>
+        <th class="border-top-0">Name</th>
+        <th class="border-top-0">Version</th>
+        <th class="border-top-0">Disable on this machine</th>
       </thead>
       <tbody>
       ${extensionItems}
