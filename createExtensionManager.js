@@ -1,6 +1,7 @@
 const filePaths = require("./filePaths");
 const extensionManagers = {
-  win32: require("./WindowsExtensionManager")
+  win32: require("./WindowsExtensionManager"),
+  linux: require("./LinuxExtensionManager")
 };
 
 function createExtensionManager() {
