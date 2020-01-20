@@ -1,6 +1,14 @@
 "use strict";
 const { ipcRenderer } = require("electron");
 
+function disableExtension(id) {
+  ipcRenderer.send("disableExtension", id);
+}
+
+function enableExtension(id) {
+  ipcRenderer.send("enableExtension", id);
+}
+
 ipcRenderer.on("extensions", (event, data) => {
   const extensionList = document.getElementById("extensionList");
 
@@ -15,7 +23,12 @@ ipcRenderer.on("extensions", (event, data) => {
       <td>${extensionData.name}</td>
       <td>${extensionData.version}</td>
       <td>
-        <input type="checkbox" ${extensionData.disabled ? "checked" : ""}/>
+        <input type="checkbox" ${
+          extensionData.disabled
+            ? `checked onclick="enableExtension('${extensionData.id}')"`
+            : `onclick="disableExtension('${extensionData.id}')"`
+        }
+        }/>
       </td>
     </tr>`;
     return html;

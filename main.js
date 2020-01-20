@@ -31,7 +31,19 @@ function createWindow() {
     mainWindow.webContents.send("extensions", extensions);
   });
 
-  ipcMain.on("list-extensions", async (event, todo) => {
+  ipcMain.on("list-extensions", async event => {
+    const extensions = await extensionManager.listExtensions();
+    mainWindow.webContents.send("extensions", extensions);
+  });
+
+  ipcMain.on("enableExtension", async (event, extId) => {
+    await extensionManager.enableExtension(extId);
+    const extensions = await extensionManager.listExtensions();
+    mainWindow.webContents.send("extensions", extensions);
+  });
+
+  ipcMain.on("disableExtension", async (event, extId) => {
+    await extensionManager.disableExtension(extId);
     const extensions = await extensionManager.listExtensions();
     mainWindow.webContents.send("extensions", extensions);
   });

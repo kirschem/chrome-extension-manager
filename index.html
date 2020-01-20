@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'sha256-aEg5nwffIr5YZf2C6BfiWWLAIh9EC+VQAqK2hXsCOZQ='; img-src 'self' data:">
-    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./main.css">
+      content="default-src 'self'; script-src 'self' 'unsafe-inline'; img-src 'self' data:"
+    />
+    <link
+      rel="stylesheet"
+      href="./node_modules/bootstrap/dist/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="./main.css" />
     <title>Chrome Extension Manager</title>
   </head>
   <body>
@@ -16,10 +20,11 @@
         <div class="col-12" id="extensionList"></div>
       </div>
     </div>
-    
 
     <!-- You can also require other files to run in this process -->
-    <script>window.jQuery = window.$ = require('jquery')</script>
+    <script>
+      window.jQuery = window.$ = require("jquery");
+    </script>
     <script src="./node_modules/bootstrap/dist/js/bootstrap.js"></script>
     <script src="./renderer.js"></script>
   </body>
