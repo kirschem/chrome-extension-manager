@@ -19,6 +19,7 @@ class ExtensionManager {
 
   async listExtensions() {
     const extensionIds = await fs.readdir(this._extensionDir);
+    const disabledExtensionIds = await this._getDisabledExtensionIds();
     return Promise.all(
       extensionIds.map(async id => {
         try {
@@ -58,7 +59,8 @@ class ExtensionManager {
             name: manifest["name"],
             version: manifest["version"],
             id: id,
-            iconSrc: iconSrc
+            iconSrc: iconSrc,
+            disabled: disabledExtensionIds.find(_id => _id === id)
           };
         } catch (error) {
           console.error(
@@ -70,6 +72,10 @@ class ExtensionManager {
         }
       })
     ).then(results => results.filter(ext => ext !== null));
+  }
+
+  async _getDisabledExtensionIds() {
+    throw new TypeError("Must override method");
   }
 
   async enableExtension(id) {

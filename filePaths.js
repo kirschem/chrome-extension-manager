@@ -10,6 +10,6 @@ module.exports = {
   linux: {
     chromeExtensions:
       process.env.HOME + "/.config/google-chrome/Default/Extensions",
-    chromeExtensionPolicies: "/etc/opt/chrome/policies/managed/policies.json"
+    chromeExtensionPolicies: "/etc/opt/chrome/policies/"
   }
 };

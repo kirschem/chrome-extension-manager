@@ -15,7 +15,7 @@ ipcRenderer.on("extensions", (event, data) => {
       <td>${extensionData.name}</td>
       <td>${extensionData.version}</td>
       <td>
-        <input type="checkbox" />
+        <input type="checkbox" ${extensionData.disabled ? "checked" : ""}/>
       </td>
     </tr>`;
     return html;
