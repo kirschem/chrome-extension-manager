@@ -18,11 +18,13 @@
   "author": "Marcel Kirsche",
   "license": "CC0-1.0",
   "devDependencies": {
+    "@types/jest": "^24.9.1",
     "electron": "^7.1.7",
     "jest": "^24.9.0"
   },
   "dependencies": {
     "bootstrap": "^4.4.1",
-    "jquery": "^3.4.1"
+    "jquery": "^3.4.1",
+    "sudo-prompt": "^9.1.1"
   }
 }
