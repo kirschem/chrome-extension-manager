@@ -1,6 +1,8 @@
 html,
 body {
   background-color: #26262b;
+  height: 100%;
+  width: 100%;
 }
 
 body,

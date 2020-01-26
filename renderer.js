@@ -1,4 +1,3 @@
-"use strict";
 const { ipcRenderer } = require("electron");
 
 function disableExtension(id) {
@@ -8,6 +7,20 @@ function disableExtension(id) {
 function enableExtension(id) {
   ipcRenderer.send("enableExtension", id);
 }
+
+ipcRenderer.on("loading", () => {
+  const html = `
+    <div id="loading-spinner"
+      class="d-flex justify-content-center align-items-center position-absolute"
+      style="top:50%; left:50%; margin-left:-15px; margin-top:-15px;">
+      <div class="spinner-border" style="height: 30px; width: 30px;"></div>
+    </div>
+  `;
+  const extensionList = document.getElementById("extensionList");
+  extensionList.innerHTML = "";
+
+  document.body.innerHTML += html;
+});
 
 ipcRenderer.on("extensions", (event, data) => {
   const extensionList = document.getElementById("extensionList");
@@ -47,5 +60,9 @@ ipcRenderer.on("extensions", (event, data) => {
       </tbody>
     </table>
   `;
+  const loadingSpinner = document.getElementById("loading-spinner");
+  if (loadingSpinner) {
+    loadingSpinner.remove();
+  }
   extensionList.innerHTML = tableHtml;
 });

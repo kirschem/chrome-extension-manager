@@ -37,12 +37,14 @@ function createWindow() {
   });
 
   ipcMain.on("enableExtension", async (event, extId) => {
+    mainWindow.webContents.send("loading");
     await extensionManager.enableExtension(extId);
     const extensions = await extensionManager.listExtensions();
     mainWindow.webContents.send("extensions", extensions);
   });
 
   ipcMain.on("disableExtension", async (event, extId) => {
+    mainWindow.webContents.send("loading");
     await extensionManager.disableExtension(extId);
     const extensions = await extensionManager.listExtensions();
     mainWindow.webContents.send("extensions", extensions);

@@ -2,10 +2,9 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'unsafe-inline'; img-src 'self' data:"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; style-src 'self' 'unsafe-inline'"
     />
     <link
       rel="stylesheet"
@@ -21,7 +20,6 @@
       </div>
     </div>
 
-    <!-- You can also require other files to run in this process -->
     <script>
       window.jQuery = window.$ = require("jquery");
     </script>
