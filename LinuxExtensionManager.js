@@ -2,6 +2,7 @@ const _fs = require("fs");
 const path = require("path");
 const fs = _fs.promises;
 const ExtensionManager = require("./ExtensionManager");
+const ElevatedCommandExecutor = require("./ElevatedCommandExecutor");
 
 class LinuxExtensionManager extends ExtensionManager {
   async _getPolicyFileWithExtension(files, extensionId) {
@@ -9,14 +10,17 @@ class LinuxExtensionManager extends ExtensionManager {
       files.map(async file => {
         return {
           file: file,
-          content: await fs.readFile(file).then(file => JSON.parse(file))
+          content: await fs
+            .readFile(file)
+            .then(contents => JSON.parse(contents))
         };
       })
     );
 
-    return jsonPolicies.filter(jsonPolicy =>
+    const policiesWithId = jsonPolicies.filter(jsonPolicy =>
       this._policyContainsExtension(jsonPolicy.content, extensionId)
-    )[0].file;
+    );
+    return policiesWithId.length > 0 ? policiesWithId[0].file : null;
   }
 
   _policyContainsExtension(policyContent, extensionId) {
@@ -81,6 +85,40 @@ class LinuxExtensionManager extends ExtensionManager {
     return disabledExtensionIds;
   }
 
+  async disableExtension(id) {
+    const policyFiles = await this._getPolicyFiles();
+    const policyFileWithExtension = await this._getPolicyFileWithExtension(
+      policyFiles,
+      id
+    );
+
+    let policyFileContents = {};
+    if (policyFileWithExtension) {
+      // Policy file with settings for this extension already exists
+      // Overwrite only installation_mode
+      policyFileContents = await fs
+        .readFile(policyFileWithExtension)
+        .then(content => JSON.parse(content));
+      policyFileContents.ExtensionSettings[id] = {
+        installation_mode: "blocked"
+      };
+    } else {
+      // No policy file with extension settings exists yet
+      // => create new file
+      policyFileContents = {
+        ExtensionSettings: { [id]: { installation_mode: "blocked" } }
+      };
+    }
+
+    const cmd = `echo '${JSON.stringify(policyFileContents)}' > ${
+      policyFileWithExtension
+        ? policyFileWithExtension
+        : path.join(this._policiesDir, "managed", "chrome-ext-manager.json")
+    }`;
+    const cmdExecutor = new ElevatedCommandExecutor();
+    return cmdExecutor.execute(cmd);
+  }
+
   async enableExtension(id) {
     const policyFiles = await this._getPolicyFiles();
     const policyFileWithExtension = await this._getPolicyFileWithExtension(
@@ -88,14 +126,17 @@ class LinuxExtensionManager extends ExtensionManager {
       id
     );
 
-    const jsonPolicy = await fs
+    let policyFileContents = await fs
       .readFile(policyFileWithExtension)
       .then(content => JSON.parse(content));
 
-    jsonPolicy.ExtensionSettings[id].installation_mode = "blocked";
+    policyFileContents.ExtensionSettings[id].installation_mode = "allowed";
 
-    // TODO: run as root
-    return fs.writeFile(policyFileWithExtension, JSON.stringify(jsonPolicy));
+    const cmd = `echo '${JSON.stringify(
+      policyFileContents
+    )}' > ${policyFileWithExtension}`;
+    const cmdExecutor = new ElevatedCommandExecutor();
+    return cmdExecutor.execute(cmd);
   }
 }
 
