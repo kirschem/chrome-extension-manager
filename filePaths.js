@@ -6,7 +6,11 @@ module.exports = {
     chromeExtensionPolicies:
       "SoftwarePoliciesGoogleChromeExtensionInstallBlacklist"
   },
-  darwin: {},
+  darwin: {
+    chromeExtensions:
+      process.env.HOME + "/Library/Application Support/Google/Chrome/Default",
+    chromeExtensionPolicies: ""
+  },
   linux: {
     chromeExtensions:
       process.env.HOME + "/.config/google-chrome/Default/Extensions",
