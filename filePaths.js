@@ -9,7 +9,7 @@ module.exports = {
   darwin: {
     chromeExtensions:
       process.env.HOME + "/Library/Application Support/Google/Chrome/Default",
-    chromeExtensionPolicies: ""
+    chromeExtensionPolicies: process.env.HOME + "/Library/Preferences"
   },
   linux: {
     chromeExtensions:
