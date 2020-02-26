@@ -27,35 +27,84 @@ class WindowsExtensionManager extends ExtensionManager {
   async _getDisabledExtensionIds() {
     const cmd = `reg query ${this._policiesDir}`;
     const cmdExecutor = new ElevatedCommandExecutor();
-    const regQueryResult = await cmdExecutor.execute(cmd);
-    if (regQueryResult.stderr || regQueryResult.error) {
+    try {
+      const regQueryResult = await cmdExecutor.execute(cmd);
+      const parsedRegQueryResult = this._parseRegQueryResult(regQueryResult);
+      return parsedRegQueryResult
+        .filter(pair => pair.value)
+        .map(pair => pair.value);
+    } catch (error) {
       console.error(
         "Failed querying disabled extensions from registry. Reason: %s",
-        regQueryResult.error || regQueryResult.stderr
+        error
       );
       return [];
     }
-    const parsedRegQueryResult = this._parseRegQueryResult(
-      regQueryResult.stdout
-    );
-
-    // TODO: extract ids from parsed reg query result
-    return [];
   }
 
-  async disableExtension(id) {}
+  async disableExtension(id) {
+    const cmd = `reg ADD ${this._policiesDir} /t REG_SZ /d ${id} /v ${id} /f`;
+    const cmdExecutor = new ElevatedCommandExecutor();
+    try {
+      await cmdExecutor.execute(cmd);
+      return this._updatePolicySettings();
+    } catch (error) {
+      console.error("Failed disabling extension %s. Reason: %s", id, error);
+      return;
+    }
+  }
 
   async enableExtension(id) {
-    const cmd = `reg ADD ${this._policiesDir} /t REG_SZ /d ${id}`;
+    const cmd = `reg query ${this._policiesDir} /d /f ${id}`;
     const cmdExecutor = new ElevatedCommandExecutor();
-    await cmdExecutor.execute(cmd);
-    return this._updatePolicySettings();
+    let regValuesToDelete = [];
+    try {
+      const queryResult = await cmdExecutor.execute(cmd);
+      regValuesToDelete = this._parseRegQueryResult(queryResult).map(
+        pair => pair.key
+      );
+      if (regValuesToDelete.length === 0) {
+        // TODO: error handling
+        return;
+      }
+    } catch (error) {
+      console.error(
+        "Failed querying for disabled extension with id '%s'. Reason: %s",
+        id,
+        error
+      );
+      return;
+    }
+
+    await Promise.all(
+      regValuesToDelete.map(async regValue => {
+        const delCmd = `reg delete ${this._policiesDir} /v "${regValue}" /f`;
+        try {
+          return await cmdExecutor.execute(delCmd);
+        } catch (error) {
+          console.error(
+            "Enabling extension with id %s: Could not delete '%s' under %s. Reason: %s",
+            id,
+            regValue,
+            error
+          );
+          return Promise.resolve();
+        }
+      })
+    );
   }
 
   async _updatePolicySettings() {
     const cmd = "gpupdate /force";
     const cmdExecutor = new ElevatedCommandExecutor();
-    return cmdExecutor.execute(cmd);
+    try {
+      return cmdExecutor.execute(cmd);
+    } catch (error) {
+      console.error(
+        "Error during update of policy settings. Reason: %s",
+        error
+      );
+    }
   }
 }
 
