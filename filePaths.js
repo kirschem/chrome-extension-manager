@@ -4,7 +4,7 @@ module.exports = {
       process.env.APPDATA +
       "\\..\\Local\\Google\\Chrome\\User Data\\Default\\Extensions",
     chromeExtensionPolicies:
-      "HKEY_CURRENT_USER\\Software\\Policies\\Google\\ExtensionInstallBlacklist"
+      "HKEY_CURRENT_USER\\Software\\Policies\\Google\\Chrome\\ExtensionInstallBlacklist"
   },
   darwin: {
     chromeExtensions:

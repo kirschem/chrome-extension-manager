@@ -1,8 +1,6 @@
-const _fs = require("fs");
-const path = require("path");
-const fs = _fs.promises;
 const ExtensionManager = require("./ExtensionManager");
 const ElevatedCommandExecutor = require("./ElevatedCommandExecutor");
+const executeCommand = require("./executeCommand");
 
 class WindowsExtensionManager extends ExtensionManager {
   _parseRegQueryResult(regQueryResult) {
@@ -95,10 +93,11 @@ class WindowsExtensionManager extends ExtensionManager {
   }
 
   async _updatePolicySettings() {
-    const cmd = "gpupdate /force";
-    const cmdExecutor = new ElevatedCommandExecutor();
+    // TODO: This does not work. Chrome does not apply the policy from registry. Using /force causes old values to be set.
+    // Research HKLM vs HKCU
+    const cmd = "gpupdate";
     try {
-      return cmdExecutor.execute(cmd);
+      return executeCommand(cmd);
     } catch (error) {
       console.error(
         "Error during update of policy settings. Reason: %s",
