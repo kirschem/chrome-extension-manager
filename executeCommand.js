@@ -1,7 +1,7 @@
 const exec = require("child_process").exec;
 
 async function executeCommand(command) {
-  console.debug("Executing command: %s", command);
+  console.debug("Executing cmd: %s", command);
   return await new Promise((resolve, reject) => {
     exec(command, (error, stdout, stderr) => {
       if (error || stderr) {

@@ -16,6 +16,9 @@ class ElevatedCommandExecutor {
         function(error, stdout, stderr) {
           const result = { error, stdout, stderr };
           if (error || stderr) {
+            console.error(
+              `Error executing command in elevated context '${command}': ${stderr}`
+            );
             reject(error || stderr);
           }
           if (process.platform !== "win32") {
