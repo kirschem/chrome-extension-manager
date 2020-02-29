@@ -93,8 +93,8 @@ class WindowsExtensionManager extends ExtensionManager {
   }
 
   async _updatePolicySettings() {
-    // TODO: This does not work. Chrome does not apply the policy from registry. Using /force causes old values to be set.
-    // Research HKLM vs HKCU
+    // TODO: This does not work. Chrome does not apply the policy from registry.
+    // Maybe just open the chrome://policy page and ask the user to refresh manually.
     const cmd = "gpupdate";
     try {
       return executeCommand(cmd);
