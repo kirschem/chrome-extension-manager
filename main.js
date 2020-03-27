@@ -1,7 +1,7 @@
 "use strict";
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
-const createExtensionManager = require("./createExtensionManager");
+const createExtensionManager = require("./chromeExtensionManager/createExtensionManager");
 const extensionManager = createExtensionManager();
 
 // Keep a global reference of the window object, if you don't, the window will

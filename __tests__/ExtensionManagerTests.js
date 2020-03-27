@@ -1,4 +1,4 @@
-const ExtensionManager = require("../ExtensionManager");
+const ExtensionManager = require("../chromeExtensionManager/extensionManager");
 
 test("listExtensions()", async () => {
   const extensionManager = new ExtensionManager(

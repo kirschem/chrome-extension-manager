@@ -1,4 +1,4 @@
-const ElevatedCommandExecutor = require("../ElevatedCommandExecutor");
+const ElevatedCommandExecutor = require("../elevatedCommandExecutor");
 
 test("Command executes with env var set", async done => {
   const elevatedCommandExecutor = new ElevatedCommandExecutor({

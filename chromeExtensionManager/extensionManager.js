@@ -4,8 +4,6 @@ const { app } = require("electron");
 const fs = _fs.promises;
 
 class ExtensionManager {
-  _localesFolder = "_locales";
-
   constructor(extensionDir, policiesDir) {
     // Removed for easier testing
     // if (new.target === ExtensionManager) {
@@ -15,6 +13,7 @@ class ExtensionManager {
     // }
     this._extensionDir = extensionDir;
     this._policiesDir = policiesDir;
+    this._localesFolder = "_locales";
   }
 
   async listExtensions() {

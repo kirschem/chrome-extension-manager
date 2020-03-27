@@ -1,6 +1,6 @@
-const ExtensionManager = require("./ExtensionManager");
-const ElevatedCommandExecutor = require("./ElevatedCommandExecutor");
-const executeCommand = require("./executeCommand");
+const ExtensionManager = require("./extensionManager");
+const ElevatedCommandExecutor = require("../elevatedCommandExecutor");
+const executeCommand = require("../executeCommand");
 
 class WindowsExtensionManager extends ExtensionManager {
   _parseRegQueryResult(regQueryResult) {

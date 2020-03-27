@@ -1,8 +1,8 @@
 const _fs = require("fs");
 const path = require("path");
 const fs = _fs.promises;
-const ExtensionManager = require("./ExtensionManager");
-const ElevatedCommandExecutor = require("./ElevatedCommandExecutor");
+const ExtensionManager = require("./extensionManager");
+const ElevatedCommandExecutor = require("../elevatedCommandExecutor");
 
 class LinuxExtensionManager extends ExtensionManager {
   async _getPolicyFileWithExtension(files, extensionId) {
