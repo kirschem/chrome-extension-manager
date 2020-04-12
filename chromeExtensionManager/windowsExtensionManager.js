@@ -6,18 +6,18 @@ class WindowsExtensionManager extends ExtensionManager {
   _parseRegQueryResult(regQueryResult) {
     const regex = /[\w()]* *REG_SZ *\w*/gm;
     const matches = regQueryResult.match(regex);
-    if (matches.length === 0) {
+    if (!matches) {
       return [];
     }
 
-    return matches.map(match => {
+    return matches.map((match) => {
       match = match.replace(/  +/g, " ");
       const matchData = match.split(" ");
       const key = matchData[0];
       const value = matchData[2];
       return {
         key,
-        value
+        value,
       };
     });
   }
@@ -29,8 +29,8 @@ class WindowsExtensionManager extends ExtensionManager {
       const regQueryResult = await cmdExecutor.execute(cmd);
       const parsedRegQueryResult = this._parseRegQueryResult(regQueryResult);
       return parsedRegQueryResult
-        .filter(pair => pair.value)
-        .map(pair => pair.value);
+        .filter((pair) => pair.value)
+        .map((pair) => pair.value);
     } catch (error) {
       console.error(
         "Failed querying disabled extensions from registry. Reason: %s",
@@ -59,7 +59,7 @@ class WindowsExtensionManager extends ExtensionManager {
     try {
       const queryResult = await cmdExecutor.execute(cmd);
       regValuesToDelete = this._parseRegQueryResult(queryResult).map(
-        pair => pair.key
+        (pair) => pair.key
       );
       if (regValuesToDelete.length === 0) {
         // TODO: error handling
@@ -75,7 +75,7 @@ class WindowsExtensionManager extends ExtensionManager {
     }
 
     await Promise.all(
-      regValuesToDelete.map(async regValue => {
+      regValuesToDelete.map(async (regValue) => {
         const delCmd = `reg delete ${this._policiesDir} /v "${regValue}" /f`;
         try {
           return await cmdExecutor.execute(delCmd);

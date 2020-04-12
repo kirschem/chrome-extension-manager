@@ -1,11 +1,10 @@
-const filePaths = require("../filePaths");
 const extensionManagers = {
   win32: require("./windowsExtensionManager"),
   linux: require("./linuxExtensionManager"),
-  darwin: require("./macOSExtensionManager")
+  darwin: require("./macOSExtensionManager"),
 };
 
-function createExtensionManager() {
+function createExtensionManager(filePaths) {
   const platform = process.platform;
   if (
     filePaths.hasOwnProperty(platform) &&

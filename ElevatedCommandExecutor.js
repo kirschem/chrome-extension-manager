@@ -13,11 +13,11 @@ class ElevatedCommandExecutor {
       sudo.exec(
         cmd,
         { env: this._environmentVars, name: "Chrome Extension Manager" },
-        function(error, stdout, stderr) {
+        function (error, stdout, stderr) {
           const result = { error, stdout, stderr };
           if (error || stderr) {
             console.error(
-              `Error executing command in elevated context '${command}': ${stderr}`
+              `Error executing command in elevated context '${cmd}': ${stderr}`
             );
             reject(error || stderr);
           }
