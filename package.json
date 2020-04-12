@@ -25,6 +25,7 @@
   "dependencies": {
     "bootstrap": "^4.4.1",
     "jquery": "^3.4.1",
+    "open": "^7.0.3",
     "sudo-prompt": "^9.1.1"
   }
 }

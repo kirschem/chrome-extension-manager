@@ -1,6 +1,8 @@
 const ExtensionManager = require("./extensionManager");
 const ElevatedCommandExecutor = require("../elevatedCommandExecutor");
 const executeCommand = require("../executeCommand");
+const openChrome = require("../openChrome");
+const { clipboard, dialog } = require("electron");
 
 class WindowsExtensionManager extends ExtensionManager {
   _parseRegQueryResult(regQueryResult) {
@@ -22,15 +24,14 @@ class WindowsExtensionManager extends ExtensionManager {
     });
   }
 
-  async _getDisabledExtensionIds() {
+  async _getDisabledExtensionData() {
     const cmd = `reg query ${this._policiesDir}`;
-    const cmdExecutor = new ElevatedCommandExecutor();
     try {
-      const regQueryResult = await cmdExecutor.execute(cmd);
+      const regQueryResult = await executeCommand(cmd);
       const parsedRegQueryResult = this._parseRegQueryResult(regQueryResult);
-      return parsedRegQueryResult
-        .filter((pair) => pair.value)
-        .map((pair) => pair.value);
+      return parsedRegQueryResult.filter(
+        (pair) => pair.value && parseInt(pair.key, 10) !== NaN
+      );
     } catch (error) {
       console.error(
         "Failed querying disabled extensions from registry. Reason: %s",
@@ -40,8 +41,19 @@ class WindowsExtensionManager extends ExtensionManager {
     }
   }
 
+  async _getDisabledExtensionIds() {
+    return await this._getDisabledExtensionData().then((result) =>
+      result.map((pair) => pair.value)
+    );
+  }
+
   async disableExtension(id) {
-    const cmd = `reg ADD ${this._policiesDir} /t REG_SZ /d ${id} /v ${id} /f`;
+    const prevKeyNames = await this._getDisabledExtensionData().then((result) =>
+      result.map((pair) => parseInt(pair.key)).sort()
+    );
+    const newKeyName =
+      prevKeyNames.length > 0 ? prevKeyNames[prevKeyNames.length - 1] + 1 : 1;
+    const cmd = `reg ADD ${this._policiesDir} /t REG_SZ /d ${id} /v ${newKeyName} /f`;
     const cmdExecutor = new ElevatedCommandExecutor();
     try {
       await cmdExecutor.execute(cmd);
@@ -54,10 +66,9 @@ class WindowsExtensionManager extends ExtensionManager {
 
   async enableExtension(id) {
     const cmd = `reg query ${this._policiesDir} /d /f ${id}`;
-    const cmdExecutor = new ElevatedCommandExecutor();
     let regValuesToDelete = [];
     try {
-      const queryResult = await cmdExecutor.execute(cmd);
+      const queryResult = await executeCommand(cmd);
       regValuesToDelete = this._parseRegQueryResult(queryResult).map(
         (pair) => pair.key
       );
@@ -78,6 +89,7 @@ class WindowsExtensionManager extends ExtensionManager {
       regValuesToDelete.map(async (regValue) => {
         const delCmd = `reg delete ${this._policiesDir} /v "${regValue}" /f`;
         try {
+          const cmdExecutor = new ElevatedCommandExecutor();
           return await cmdExecutor.execute(delCmd);
         } catch (error) {
           console.error(
@@ -90,20 +102,38 @@ class WindowsExtensionManager extends ExtensionManager {
         }
       })
     );
+
+    await this._updatePolicySettings();
   }
 
   async _updatePolicySettings() {
     // TODO: This does not work. Chrome does not apply the policy from registry.
     // Maybe just open the chrome://policy page and ask the user to refresh manually.
-    const cmd = "gpupdate";
-    try {
-      return executeCommand(cmd);
-    } catch (error) {
-      console.error(
-        "Error during update of policy settings. Reason: %s",
-        error
-      );
-    }
+    // const cmd = "gpupdate /force";
+    // try {
+    //   return executeCommand(cmd);
+    // } catch (error) {
+    //   console.error(
+    //     "Error during update of policy settings. Reason: %s",
+    //     error
+    //   );
+    // }
+
+    // Workaround: Instruct the user the manually reload policies (chrome settings pages must be typed in manually by the user,
+    // see https://stackoverflow.com/questions/35624774/how-to-open-chrome-inspect-devices-using-command-prompt)
+
+    clipboard.writeText("chrome://policy");
+    dialog
+      .showMessageBox({
+        type: "info",
+        buttons: ["Open Chrome"],
+        title: "Chrome Extension Manager",
+        detail:
+          "The URL has already been copied to your clipboard. Just paste it into the address bar.",
+        message:
+          "Please open 'chrome://policy' and hit the 'Refresh Policies' button to apply the changes.",
+      })
+      .then(() => openChrome());
   }
 }
 

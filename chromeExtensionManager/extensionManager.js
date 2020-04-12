@@ -5,12 +5,11 @@ const fs = _fs.promises;
 
 class ExtensionManager {
   constructor(extensionDir, policiesDir) {
-    // Removed for easier testing
-    // if (new.target === ExtensionManager) {
-    //   throw new TypeError(
-    //     "Cannot create instance of abstract class ExtensionManager"
-    //   );
-    // }
+    if (new.target === ExtensionManager) {
+      throw new TypeError(
+        "Cannot create instance of abstract class ExtensionManager"
+      );
+    }
     this._extensionDir = extensionDir;
     this._policiesDir = policiesDir;
     this._localesFolder = "_locales";
@@ -20,7 +19,7 @@ class ExtensionManager {
     const extensionIds = await fs.readdir(this._extensionDir);
     const disabledExtensionIds = await this._getDisabledExtensionIds();
     return Promise.all(
-      extensionIds.map(async id => {
+      extensionIds.map(async (id) => {
         try {
           // Get the version folder first, that contains the extension's src
           const versionFolder = (
@@ -32,7 +31,7 @@ class ExtensionManager {
             .readFile(
               path.join(this._extensionDir, id, versionFolder, "manifest.json")
             )
-            .then(buffer => JSON.parse(buffer));
+            .then((buffer) => JSON.parse(buffer));
 
           // Get translated extension name
           if (manifest["name"].startsWith("__")) {
@@ -59,7 +58,7 @@ class ExtensionManager {
             version: manifest["version"],
             id: id,
             iconSrc: iconSrc,
-            disabled: disabledExtensionIds.find(_id => _id === id)
+            disabled: disabledExtensionIds.find((_id) => _id === id),
           };
         } catch (error) {
           console.error(
@@ -70,7 +69,7 @@ class ExtensionManager {
           return null;
         }
       })
-    ).then(results => results.filter(ext => ext !== null));
+    ).then((results) => results.filter((ext) => ext !== null));
   }
 
   async _getDisabledExtensionIds() {
@@ -100,7 +99,7 @@ class ExtensionManager {
     key = key.replace("MSG_", "").replace(/__/g, "");
 
     // Some translations are lowercase regardless of caml case key, some respect case sensitivity
-    const bufferToTranslation = buffer => {
+    const bufferToTranslation = (buffer) => {
       const translations = JSON.parse(buffer);
       return translations[key]
         ? translations[key].message
@@ -116,7 +115,7 @@ class ExtensionManager {
       // Otherwise get the first english version we can find
       const englishLocaleFolder = await (
         await fs.readdir(localesPath)
-      ).find(locale => locale.startsWith("en"));
+      ).find((locale) => locale.startsWith("en"));
       if (englishLocaleFolder) {
         return await fs
           .readFile(

@@ -1,4 +1,3 @@
-const ExtensionManager = require("../chromeExtensionManager/extensionManager");
 const createExtensionManager = require("../chromeExtensionManager/createExtensionManager");
 const fakePaths = {
   win32: {
