@@ -126,14 +126,14 @@ class WindowsExtensionManager extends ExtensionManager {
     dialog
       .showMessageBox({
         type: "info",
-        buttons: ["Open Chrome"],
+        buttons: ["Open Chrome", "Cancel"],
         title: "Chrome Extension Manager",
         detail:
           "The URL has already been copied to your clipboard. Just paste it into the address bar.",
         message:
           "Please open 'chrome://policy' and hit the 'Refresh Policies' button to apply the changes.",
       })
-      .then(() => openChrome());
+      .then((clickedBtn) => clickedBtn === 0 && openChrome());
   }
 }
 
