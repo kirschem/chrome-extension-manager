@@ -1,7 +1,7 @@
 const ExtensionManager = require("./extensionManager");
-const ElevatedCommandExecutor = require("../elevatedCommandExecutor");
+const ElevatedCommandExecutor = require("../../util/elevatedCommandExecutor");
 const path = require("path");
-const executeCommand = require("../executeCommand");
+const executeCommand = require("../../util/executeCommand");
 const fs = require("fs").promises;
 
 class MacOSExtensionManager extends ExtensionManager {
@@ -19,7 +19,7 @@ class MacOSExtensionManager extends ExtensionManager {
       await executeCommand(cmd);
       const jsonContent = await fs
         .readFile(this._policiesFile)
-        .then(content => JSON.parse(content));
+        .then((content) => JSON.parse(content));
 
       return jsonContent;
     } catch (error) {

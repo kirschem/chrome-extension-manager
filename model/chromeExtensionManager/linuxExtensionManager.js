@@ -2,22 +2,22 @@ const _fs = require("fs");
 const path = require("path");
 const fs = _fs.promises;
 const ExtensionManager = require("./extensionManager");
-const ElevatedCommandExecutor = require("../elevatedCommandExecutor");
+const ElevatedCommandExecutor = require("../../util/elevatedCommandExecutor");
 
 class LinuxExtensionManager extends ExtensionManager {
   async _getPolicyFileWithExtension(files, extensionId) {
     const jsonPolicies = await Promise.all(
-      files.map(async file => {
+      files.map(async (file) => {
         return {
           file: file,
           content: await fs
             .readFile(file)
-            .then(contents => JSON.parse(contents))
+            .then((contents) => JSON.parse(contents)),
         };
       })
     );
 
-    const policiesWithId = jsonPolicies.filter(jsonPolicy =>
+    const policiesWithId = jsonPolicies.filter((jsonPolicy) =>
       this._policyContainsExtension(jsonPolicy.content, extensionId)
     );
     return policiesWithId.length > 0 ? policiesWithId[0].file : null;
@@ -34,13 +34,13 @@ class LinuxExtensionManager extends ExtensionManager {
     const policyFolders = await fs.readdir(this._policiesDir);
     const policyFiles = [];
 
-    if (policyFolders.find(dirName => dirName === "managed")) {
+    if (policyFolders.find((dirName) => dirName === "managed")) {
       await fs
         .readdir(path.join(this._policiesDir, "managed"))
-        .then(files =>
-          files.map(file => path.join(this._policiesDir, "managed", file))
+        .then((files) =>
+          files.map((file) => path.join(this._policiesDir, "managed", file))
         )
-        .then(files => policyFiles.push(...files));
+        .then((files) => policyFiles.push(...files));
     }
 
     return policyFiles;
@@ -64,10 +64,10 @@ class LinuxExtensionManager extends ExtensionManager {
     for (const policyFile of policyFiles) {
       const jsonPolicy = await fs
         .readFile(policyFile)
-        .then(file => JSON.parse(file));
+        .then((file) => JSON.parse(file));
       if (jsonPolicy.ExtensionSettings) {
         const idsInFile = Object.keys(jsonPolicy.ExtensionSettings).filter(
-          id => {
+          (id) => {
             if (
               jsonPolicy.ExtensionSettings.hasOwnProperty(id) &&
               jsonPolicy.ExtensionSettings[id].installation_mode &&
@@ -98,15 +98,15 @@ class LinuxExtensionManager extends ExtensionManager {
       // Overwrite only installation_mode
       policyFileContents = await fs
         .readFile(policyFileWithExtension)
-        .then(content => JSON.parse(content));
+        .then((content) => JSON.parse(content));
       policyFileContents.ExtensionSettings[id] = {
-        installation_mode: "blocked"
+        installation_mode: "blocked",
       };
     } else {
       // No policy file with extension settings exists yet
       // => create new file
       policyFileContents = {
-        ExtensionSettings: { [id]: { installation_mode: "blocked" } }
+        ExtensionSettings: { [id]: { installation_mode: "blocked" } },
       };
     }
 
@@ -128,7 +128,7 @@ class LinuxExtensionManager extends ExtensionManager {
 
     let policyFileContents = await fs
       .readFile(policyFileWithExtension)
-      .then(content => JSON.parse(content));
+      .then((content) => JSON.parse(content));
 
     policyFileContents.ExtensionSettings[id].installation_mode = "allowed";
 

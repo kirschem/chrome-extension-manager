@@ -1,4 +1,4 @@
-const createExtensionManager = require("../chromeExtensionManager/createExtensionManager");
+const createExtensionManager = require("../model/chromeExtensionManager/createExtensionManager");
 const fakePaths = {
   win32: {
     chromeExtensions: "./__tests__/fake-extensions-dir",

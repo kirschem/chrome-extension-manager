@@ -1,7 +1,7 @@
 const ExtensionManager = require("./extensionManager");
-const ElevatedCommandExecutor = require("../elevatedCommandExecutor");
-const executeCommand = require("../executeCommand");
-const openChrome = require("../openChrome");
+const ElevatedCommandExecutor = require("../../util/elevatedCommandExecutor");
+const executeCommand = require("../../util/executeCommand");
+const openChrome = require("../../util/openChrome");
 const { clipboard, dialog } = require("electron");
 
 class WindowsExtensionManager extends ExtensionManager {

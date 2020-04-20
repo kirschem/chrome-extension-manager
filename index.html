@@ -6,24 +6,15 @@
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; style-src 'self' 'unsafe-inline'"
     />
-    <link
-      rel="stylesheet"
-      href="./node_modules/bootstrap/dist/css/bootstrap.min.css"
-    />
-    <link rel="stylesheet" href="./main.css" />
+    <link rel="stylesheet" href="./assets/vendor/loading.io/spinner.css" />
+    <link rel="stylesheet" href="./assets/main.css" />
     <title>Chrome Extension Manager</title>
   </head>
   <body>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-12" id="extensionList"></div>
-      </div>
-    </div>
-
+    <div id="extensionList"></div>
     <script>
       window.jQuery = window.$ = require("jquery");
     </script>
-    <script src="./node_modules/bootstrap/dist/js/bootstrap.js"></script>
     <script src="./renderer.js"></script>
   </body>
 </html>

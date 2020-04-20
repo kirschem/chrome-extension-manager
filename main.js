@@ -1,8 +1,8 @@
 "use strict";
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
-const createExtensionManager = require("./chromeExtensionManager/createExtensionManager");
-const filePaths = require("./filePaths");
+const createExtensionManager = require("./model/chromeExtensionManager/createExtensionManager");
+const filePaths = require("./util/filePaths");
 const extensionManager = createExtensionManager(filePaths);
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -28,6 +28,7 @@ function createWindow() {
   });
 
   mainWindow.webContents.on("did-finish-load", async () => {
+    mainWindow.webContents.send("loading");
     const extensions = await extensionManager.listExtensions();
     mainWindow.webContents.send("extensions", extensions);
   });

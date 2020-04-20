@@ -10,10 +10,8 @@ function enableExtension(id) {
 
 ipcRenderer.on("loading", () => {
   const html = `
-    <div id="loading-spinner"
-      class="d-flex justify-content-center align-items-center position-absolute"
-      style="top:50%; left:50%; margin-left:-15px; margin-top:-15px;">
-      <div class="spinner-border" style="height: 30px; width: 30px;"></div>
+    <div id="loadingSpinner">
+    <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
     </div>
   `;
   const extensionList = document.getElementById("extensionList");
@@ -48,19 +46,19 @@ ipcRenderer.on("extensions", (event, data) => {
   }, "");
 
   const tableHtml = `
-    <table class="table">
+    <table class="table-striped">
       <thead>
-        <th class="border-top-0"></th>
-        <th class="border-top-0">Name</th>
-        <th class="border-top-0">Version</th>
-        <th class="border-top-0">Disable on this machine for current user</th>
+        <th></th>
+        <th>Name</th>
+        <th>Version</th>
+        <th>Disable locally</th>
       </thead>
       <tbody>
       ${extensionItems}
       </tbody>
     </table>
   `;
-  const loadingSpinner = document.getElementById("loading-spinner");
+  const loadingSpinner = document.getElementById("loadingSpinner");
   if (loadingSpinner) {
     loadingSpinner.remove();
   }
