@@ -1,5 +1,4 @@
 const ExtensionManager = require("./extensionManager");
-const ElevatedCommandExecutor = require("../../util/elevatedCommandExecutor");
 const path = require("path");
 const executeCommand = require("../../util/executeCommand");
 const fs = require("fs").promises;
@@ -36,6 +35,7 @@ class MacOSExtensionManager extends ExtensionManager {
   }
 
   async _getDisabledExtensionIds() {
+    return [];
     throw new TypeError("Must override method");
   }
 
