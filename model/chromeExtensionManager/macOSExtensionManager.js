@@ -2,6 +2,7 @@ const ExtensionManager = require("./extensionManager");
 const path = require("path");
 const executeCommand = require("../../util/executeCommand");
 const fs = require("fs").promises;
+const { dialog } = require("electron");
 
 class MacOSExtensionManager extends ExtensionManager {
   _policiesFileName = "com.google.Chrome.plist";
@@ -10,6 +11,11 @@ class MacOSExtensionManager extends ExtensionManager {
   async _reloadPlistFile() {
     const cmd = `defaults read ${this._policiesFile}`;
     await executeCommand(cmd);
+    dialog.showMessageBox({
+      type: "info",
+      title: "Chrome Extension Manager",
+      message: "You need to re-open Chrome for the changes to take effect.",
+    });
   }
 
   async _readPlistFile() {
@@ -30,21 +36,82 @@ class MacOSExtensionManager extends ExtensionManager {
     }
   }
 
-  _writePlistFile(plistJsonObj) {
-    // TODO: Overwrite plist file and convert to binary
+  async _writePlistFile(plistJsonObj) {
+    // Backup old plist
+    // TODO: Maybe add a hash of plistJsonObj as part of the filename
+    const backupFile = this._policiesFile + ".BAK";
+    try {
+      fs.copyFile(this._policiesFile, backupFile);
+    } catch (error) {
+      console.error(
+        "_writePlistFile: could not backup file '%s', aborting...",
+        backupFile
+      );
+      throw error;
+    }
+
+    // Overwrite plist
+    try {
+      await fs.writeFile(this._policiesFile, JSON.stringify(plistJsonObj));
+      const cmd = `plutil -convert binary1 ${this._policiesFile}`;
+      await executeCommand(cmd);
+    } catch (error) {
+      console.error(
+        "_writePlistFile: could not overwrite file  '%s', restoring backup...",
+        this._policiesFile
+      );
+      try {
+        await fs.copyFile(backupFile, this._policiesFile);
+      } catch (error) {
+        console.error(
+          "_writePlistFile: error restoring backup '%s'",
+          backupFile
+        );
+        throw error;
+      }
+    }
+
+    // Clean backup
+    try {
+      return fs.unlink(backupFile);
+    } catch (error) {
+      console.error("_writePlistFile: error deleting backup '%s'", backupFile);
+    }
   }
 
   async _getDisabledExtensionIds() {
-    return [];
-    throw new TypeError("Must override method");
+    const plistContent = await this._readPlistFile();
+    const extInstallBlacklist = plistContent.ExtensionInstallBlacklist;
+    if (!extInstallBlacklist) {
+      return [];
+    }
+    return extInstallBlacklist;
   }
 
-  async enableExtension(id) {
-    throw new TypeError("Must override method");
+  async enableExtension(id, noReload = false) {
+    const plistContent = await this._readPlistFile();
+    const extInstallBlacklist = plistContent.ExtensionInstallBlacklist;
+    if (!extInstallBlacklist) {
+      return;
+    }
+    const newBlackllist = extInstallBlacklist.filter((x) => x !== id);
+    plistContent.ExtensionInstallBlacklist = newBlackllist;
+    await this._writePlistFile(plistContent);
+    if (!noReload) {
+      await this._reloadPlistFile();
+    }
   }
 
-  async disableExtension(id) {
-    throw new TypeError("Must override method");
+  async disableExtension(id, noReload = false) {
+    const plistContent = await this._readPlistFile();
+    if (!plistContent.ExtensionInstallBlacklist) {
+      plistContent.ExtensionInstallBlacklist = [];
+    }
+    plistContent.ExtensionInstallBlacklist.push(id);
+    await this._writePlistFile(plistContent);
+    if (!noReload) {
+      await this._reloadPlistFile();
+    }
   }
 }
 

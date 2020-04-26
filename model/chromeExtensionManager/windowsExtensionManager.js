@@ -47,7 +47,7 @@ class WindowsExtensionManager extends ExtensionManager {
     );
   }
 
-  async disableExtension(id) {
+  async disableExtension(id, noReload = false) {
     const prevKeyNames = await this._getDisabledExtensionData().then((result) =>
       result.map((pair) => parseInt(pair.key)).sort()
     );
@@ -57,14 +57,16 @@ class WindowsExtensionManager extends ExtensionManager {
     const cmdExecutor = new ElevatedCommandExecutor();
     try {
       await cmdExecutor.execute(cmd);
-      return this._updatePolicySettings();
+      if (!noReload) {
+        await this._updatePolicySettings();
+      }
     } catch (error) {
       console.error("Failed disabling extension %s. Reason: %s", id, error);
       return;
     }
   }
 
-  async enableExtension(id) {
+  async enableExtension(id, noReload = false) {
     const cmd = `reg query ${this._policiesDir} /d /f ${id}`;
     let regValuesToDelete = [];
     try {
@@ -103,7 +105,9 @@ class WindowsExtensionManager extends ExtensionManager {
       })
     );
 
-    await this._updatePolicySettings();
+    if (!noReload) {
+      await this._updatePolicySettings();
+    }
   }
 
   async _updatePolicySettings() {
