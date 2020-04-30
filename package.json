@@ -23,7 +23,7 @@
     "jest": "^24.9.0"
   },
   "dependencies": {
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "open": "^7.0.3",
     "sudo-prompt": "^9.1.1"
   }
