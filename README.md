@@ -1,6 +1,6 @@
-# chrome-extension-manager
+# Chrome Extension Manager
 
-## about
+## About
 A tool to disable certain extensions on the local machine that would get installed otherwise due to them being synced from your google account.
 
 Works on:
@@ -12,5 +12,7 @@ Works on:
 ## Installation
 todo
 
-## found a bug or need some feature?
+## Usage
+
+## Found a bug or need some feature?
 Open an issue on github.
