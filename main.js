@@ -1,6 +1,5 @@
 "use strict";
-const { app, BrowserWindow, ipcMain } = require("electron");
-const path = require("path");
+const { app, BrowserWindow, ipcMain, Menu } = require("electron");
 const createExtensionManager = require("./model/chromeExtensionManager/createExtensionManager");
 const filePaths = require("./util/filePaths");
 const extensionManager = createExtensionManager(filePaths);
@@ -17,6 +16,8 @@ function createWindow() {
       nodeIntegration: true,
     },
   });
+
+  Menu.setApplicationMenu(null);
 
   mainWindow.loadFile("index.html");
 
