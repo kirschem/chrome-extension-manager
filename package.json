@@ -1,13 +1,23 @@
 {
   "name": "chrome-extension-manager",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A tool to disable chrome extensions locally, without affecting sychronization to other devices.",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "test": "node --harmony ./node_modules/jest/bin/jest.js --runInBand"
+    "test": "node --harmony ./node_modules/jest/bin/jest.js --runInBand",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "postinstall": "electron-builder install-app-deps"
   },
   "repository": "https://github.com/kirschem/chrome-extension-manager",
+  "build": {
+    "appId": "com.marcelkirsche.chrome-extension-manager",
+    "productName": "Chrome Extension Manager"
+  },
+  "win": {
+    "portable": true
+  },
   "keywords": [
     "disable",
     "manage",
@@ -20,7 +30,8 @@
   "devDependencies": {
     "@types/jest": "^24.9.1",
     "electron": "^7.1.7",
-    "jest": "^24.9.0"
+    "jest": "^24.9.0",
+    "electron-builder": "^22.6.0"
   },
   "dependencies": {
     "jquery": "^3.5.0",
