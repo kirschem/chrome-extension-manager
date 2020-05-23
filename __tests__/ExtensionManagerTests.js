@@ -14,7 +14,7 @@ const fakePaths = {
   },
   linux: {
     chromeExtensions: "./__tests__/fake-extensions-dir",
-    chromeExtensionPolicies: "",
+    chromeExtensionPolicies: "./__tests__/fake-etc-dir/opt/chrome/policies",
   },
 };
 
