@@ -69,6 +69,19 @@ test("disableExtension()", async () => {
       // Ensure other contents remain untouched
       expect(newPoliciesFile["DoNot"]).toBe("Touch");
       break;
+    case "linux":
+      const policiesFile = path.join(folder, "managed", "fake-policy.json");
+      const extensionManager = createExtensionManager(fakePaths);
+      await extensionManager.disableExtension(id, true);
+
+      // Read and check
+      const newPoliciesFile = await fs.readFile(policiesFile).then(JSON.parse);
+      const value =
+        newPoliciesFile["ExtensionSettings"][id]["installation_mode"];
+      expect(value).toBe("blocked");
+      // Ensure other contents remain untouched
+      expect(newPoliciesFile["DoNot"]).toBe("Touch");
+      break;
     default:
       console.log("Skipping %s test", process.platform);
       break;
@@ -91,6 +104,19 @@ test("enableExtension()", async () => {
       const newPoliciesFile = await fs.readFile(policiesFile).then(JSON.parse);
       const value = newPoliciesFile["ExtensionInstallBlacklist"];
       expect(value).not.toContain(id);
+      // Ensure other contents remain untouched
+      expect(newPoliciesFile["DoNot"]).toBe("Touch");
+      break;
+    case "linux":
+      const policiesFile = path.join(folder, "com.google.Chrome.plist");
+      const extensionManager = createExtensionManager(fakePaths);
+      await extensionManager.enableExtension(id, true);
+
+      // Read and check
+      const newPoliciesFile = await fs.readFile(policiesFile).then(JSON.parse);
+      const value =
+        newPoliciesFile["ExtensionSettings"][id]["installation_mode"];
+      expect(value).toBe("allowed");
       // Ensure other contents remain untouched
       expect(newPoliciesFile["DoNot"]).toBe("Touch");
       break;
