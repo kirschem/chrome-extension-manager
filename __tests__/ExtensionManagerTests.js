@@ -43,11 +43,22 @@ afterEach(cleanEnvironment);
 beforeAll(cleanEnvironment);
 
 test("listExtensions()", async () => {
-  const extensionManager = createExtensionManager(fakePaths);
-  const result = await extensionManager.listExtensions();
-  expect(result.length).toBe(2);
-  const disabledCount = result.filter((x) => x.disabled).length;
-  expect(disabledCount).toBe(1);
+  switch (process.platform) {
+    case "win32": {
+      const extensionManager = createExtensionManager(fakePaths);
+      const result = await extensionManager.listExtensions();
+      expect(result.length).toBe(2);
+      break;
+    }
+    default: {
+      const extensionManager = createExtensionManager(fakePaths);
+      const result = await extensionManager.listExtensions();
+      expect(result.length).toBe(2);
+      const disabledCount = result.filter((x) => x.disabled).length;
+      expect(disabledCount).toBe(1);
+      break;
+    }
+  }
 });
 
 test("disableExtension()", async () => {
@@ -55,7 +66,7 @@ test("disableExtension()", async () => {
   const folder = fakePaths[process.platform].chromeExtensionPolicies;
 
   switch (process.platform) {
-    case "darwin":
+    case "darwin": {
       const policiesFile = path.join(folder, "com.google.Chrome.plist");
       const extensionManager = createExtensionManager(fakePaths);
       await extensionManager.disableExtension(id, true);
@@ -69,7 +80,8 @@ test("disableExtension()", async () => {
       // Ensure other contents remain untouched
       expect(newPoliciesFile["DoNot"]).toBe("Touch");
       break;
-    case "linux":
+    }
+    case "linux": {
       const policiesFile = path.join(folder, "managed", "fake-policy.json");
       const extensionManager = createExtensionManager(fakePaths);
       await extensionManager.disableExtension(id, true);
@@ -82,6 +94,7 @@ test("disableExtension()", async () => {
       // Ensure other contents remain untouched
       expect(newPoliciesFile["DoNot"]).toBe("Touch");
       break;
+    }
     default:
       console.log("Skipping %s test", process.platform);
       break;
@@ -93,7 +106,7 @@ test("enableExtension()", async () => {
   const folder = fakePaths[process.platform].chromeExtensionPolicies;
 
   switch (process.platform) {
-    case "darwin":
+    case "darwin": {
       const policiesFile = path.join(folder, "com.google.Chrome.plist");
       const extensionManager = createExtensionManager(fakePaths);
       await extensionManager.enableExtension(id, true);
@@ -107,7 +120,8 @@ test("enableExtension()", async () => {
       // Ensure other contents remain untouched
       expect(newPoliciesFile["DoNot"]).toBe("Touch");
       break;
-    case "linux":
+    }
+    case "linux": {
       const policiesFile = path.join(folder, "com.google.Chrome.plist");
       const extensionManager = createExtensionManager(fakePaths);
       await extensionManager.enableExtension(id, true);
@@ -120,6 +134,7 @@ test("enableExtension()", async () => {
       // Ensure other contents remain untouched
       expect(newPoliciesFile["DoNot"]).toBe("Touch");
       break;
+    }
     default:
       console.log("Skipping %s test", process.platform);
       break;
