@@ -48,17 +48,6 @@ class LinuxExtensionManager extends ExtensionManager {
 
   async _getDisabledExtensionIds() {
     const policyFiles = await this._getPolicyFiles();
-
-    // Disabling extensions in /recommended seems to have no effect
-    // if (policyFolders.find(dirName => dirName === "recommended")) {
-    //   await fs
-    //     .readdir(path.join(this._policiesDir, "recommended"))
-    //     .then(files =>
-    //       files.map(file => path.join(this._policiesDir, "recommended", file))
-    //     )
-    //     .then(files => policieFiles.push(...files));
-    // }
-
     const disabledExtensionIds = [];
 
     for (const policyFile of policyFiles) {

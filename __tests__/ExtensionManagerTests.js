@@ -1,6 +1,6 @@
 const createExtensionManager = require("../model/chromeExtensionManager/createExtensionManager");
 const executeCommand = require("../util/executeCommand");
-const fs = require("fs").promises;
+const fs = require("fs-extra");
 const path = require("path");
 const fakePaths = {
   win32: {
@@ -34,7 +34,7 @@ const cleanEnvironment = async () => {
       const src = path.join(backupFolder, file);
       const dest = path.join(folder, file);
       console.log("copying %s to %s", src, dest);
-      return fs.copyFile(src, dest);
+      return fs.copy(src, dest);
     })
   );
 };

@@ -33,8 +33,9 @@
   "devDependencies": {
     "@types/jest": "^24.9.1",
     "electron": "^7.1.7",
-    "jest": "^24.9.0",
-    "electron-builder": "^22.6.0"
+    "electron-builder": "^22.6.0",
+    "fs-extra": "^9.0.0",
+    "jest": "^24.9.0"
   },
   "dependencies": {
     "jquery": "^3.5.0",
