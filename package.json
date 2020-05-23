@@ -18,6 +18,9 @@
   "win": {
     "portable": true
   },
+  "mac": {
+    "category": "public.app-category.utilities"
+  },
   "keywords": [
     "disable",
     "manage",
