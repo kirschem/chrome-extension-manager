@@ -69,8 +69,6 @@ test("disableExtension()", async () => {
       // Ensure other contents remain untouched
       expect(newPoliciesFile["DoNot"]).toBe("Touch");
       break;
-    case "linux":
-      break;
     default:
       console.log("Skipping %s test", process.platform);
       break;
@@ -95,8 +93,6 @@ test("enableExtension()", async () => {
       expect(value).not.toContain(id);
       // Ensure other contents remain untouched
       expect(newPoliciesFile["DoNot"]).toBe("Touch");
-      break;
-    case "linux":
       break;
     default:
       console.log("Skipping %s test", process.platform);
