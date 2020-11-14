@@ -1,6 +1,5 @@
 const ExtensionManager = require("./extensionManager");
 const path = require("path");
-const executeCommand = require("../../util/executeCommand");
 const fs = require("fs").promises;
 const { dialog } = require("electron");
 
@@ -10,7 +9,7 @@ class MacOSExtensionManager extends ExtensionManager {
 
   async _reloadPlistFile() {
     const cmd = `defaults read ${this._policiesFile}`;
-    await executeCommand(cmd);
+    await this._commandExecutor.execute(cmd, true);
     dialog.showMessageBox({
       type: "info",
       title: "Chrome Extension Manager",
@@ -21,18 +20,18 @@ class MacOSExtensionManager extends ExtensionManager {
   async _readPlistFile() {
     try {
       const cmd = `plutil -convert json ${this._policiesFile}`;
-      await executeCommand(cmd);
+      await this._commandExecutor.execute(cmd, true);
       const jsonContent = await fs
         .readFile(this._policiesFile)
         .then((content) => JSON.parse(content));
 
       return jsonContent;
     } catch (error) {
-      console.error("Method '_readPlistFile failed...'");
+      console.error("Method '_readPlistFile failed...'", error);
       throw error;
     } finally {
       const cmd = `plutil -convert binary1 ${this._policiesFile}`;
-      await executeCommand(cmd);
+      await this._commandExecutor.execute(cmd, true);
     }
   }
 
@@ -54,7 +53,7 @@ class MacOSExtensionManager extends ExtensionManager {
     try {
       await fs.writeFile(this._policiesFile, JSON.stringify(plistJsonObj));
       const cmd = `plutil -convert binary1 ${this._policiesFile}`;
-      await executeCommand(cmd);
+      await this._commandExecutor.execute(cmd, true);
     } catch (error) {
       console.error(
         "_writePlistFile: could not overwrite file  '%s', restoring backup...",

@@ -1,6 +1,4 @@
 const ExtensionManager = require("./extensionManager");
-const ElevatedCommandExecutor = require("../../util/elevatedCommandExecutor");
-const executeCommand = require("../../util/executeCommand");
 const openChrome = require("../../util/openChrome");
 const { clipboard, dialog } = require("electron");
 
@@ -27,7 +25,7 @@ class WindowsExtensionManager extends ExtensionManager {
   async _getDisabledExtensionData() {
     const cmd = `reg query ${this._policiesDir}`;
     try {
-      const regQueryResult = await executeCommand(cmd);
+      const regQueryResult = await this._commandExecutor.execute(cmd, true);
       const parsedRegQueryResult = this._parseRegQueryResult(regQueryResult);
       return parsedRegQueryResult.filter(
         (pair) => pair.value && parseInt(pair.key, 10) !== NaN
@@ -54,9 +52,8 @@ class WindowsExtensionManager extends ExtensionManager {
     const newKeyName =
       prevKeyNames.length > 0 ? prevKeyNames[prevKeyNames.length - 1] + 1 : 1;
     const cmd = `reg ADD ${this._policiesDir} /t REG_SZ /d ${id} /v ${newKeyName} /f`;
-    const cmdExecutor = new ElevatedCommandExecutor();
     try {
-      await cmdExecutor.execute(cmd);
+      await this._commandExecutor.execute(cmd);
       if (!noReload) {
         await this._updatePolicySettings();
       }
@@ -70,7 +67,7 @@ class WindowsExtensionManager extends ExtensionManager {
     const cmd = `reg query ${this._policiesDir} /d /f ${id}`;
     let regValuesToDelete = [];
     try {
-      const queryResult = await executeCommand(cmd);
+      const queryResult = await this._commandExecutor.execute(cmd);
       regValuesToDelete = this._parseRegQueryResult(queryResult).map(
         (pair) => pair.key
       );
@@ -91,8 +88,7 @@ class WindowsExtensionManager extends ExtensionManager {
       regValuesToDelete.map(async (regValue) => {
         const delCmd = `reg delete ${this._policiesDir} /v "${regValue}" /f`;
         try {
-          const cmdExecutor = new ElevatedCommandExecutor();
-          return await cmdExecutor.execute(delCmd);
+          return await this._commandExecutor.execute(cmd, true);
         } catch (error) {
           console.error(
             "Enabling extension with id %s: Could not delete '%s' under %s. Reason: %s",

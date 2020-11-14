@@ -4,12 +4,22 @@ const { app } = require("electron");
 const fs = _fs.promises;
 
 class ExtensionManager {
-  constructor(extensionDir, policiesDir) {
+  constructor(extensionDir, policiesDir, commandExecutor) {
     if (new.target === ExtensionManager) {
       throw new TypeError(
         "Cannot create instance of abstract class ExtensionManager"
       );
     }
+    if (!extensionDir || !policiesDir || !commandExecutor) {
+      throw new Error(
+        `Got null dependencies: , ${JSON.stringify({
+          extensionDir: `${extensionDir}`,
+          policiesDir: `${policiesDir}`,
+          commandExecutor: `${commandExecutor}`,
+        })}`
+      );
+    }
+    this._commandExecutor = commandExecutor;
     this._extensionDir = extensionDir;
     this._policiesDir = policiesDir;
     this._localesFolder = "_locales";

@@ -1,5 +1,7 @@
 const createExtensionManager = require("../model/chromeExtensionManager/createExtensionManager");
 const executeCommand = require("../util/executeCommand");
+// Evelated execution does not work inside the build pipeline
+const CommandExecutor = require("../util/commandExecutor");
 const fs = require("fs-extra");
 const path = require("path");
 const fakePaths = {
@@ -45,13 +47,19 @@ beforeAll(cleanEnvironment);
 test("listExtensions()", async () => {
   switch (process.platform) {
     case "win32": {
-      const extensionManager = createExtensionManager(fakePaths);
+      const extensionManager = createExtensionManager(
+        fakePaths,
+        new CommandExecutor()
+      );
       const result = await extensionManager.listExtensions();
       expect(result.length).toBe(2);
       break;
     }
     default: {
-      const extensionManager = createExtensionManager(fakePaths);
+      const extensionManager = createExtensionManager(
+        fakePaths,
+        new CommandExecutor()
+      );
       const result = await extensionManager.listExtensions();
       expect(result.length).toBe(2);
       const disabledCount = result.filter((x) => x.disabled).length;
@@ -68,7 +76,10 @@ test("disableExtension()", async () => {
   switch (process.platform) {
     case "darwin": {
       const policiesFile = path.join(folder, "com.google.Chrome.plist");
-      const extensionManager = createExtensionManager(fakePaths);
+      const extensionManager = createExtensionManager(
+        fakePaths,
+        new CommandExecutor()
+      );
       await extensionManager.disableExtension(id, true);
       // Convert to JSON
       const cmd = `plutil -convert json ${policiesFile}`;
@@ -83,7 +94,10 @@ test("disableExtension()", async () => {
     }
     case "linux": {
       const policiesFile = path.join(folder, "managed", "fake-policy.json");
-      const extensionManager = createExtensionManager(fakePaths);
+      const extensionManager = createExtensionManager(
+        fakePaths,
+        new CommandExecutor()
+      );
       await extensionManager.disableExtension(id, true);
 
       // Read and check
@@ -108,7 +122,10 @@ test("enableExtension()", async () => {
   switch (process.platform) {
     case "darwin": {
       const policiesFile = path.join(folder, "com.google.Chrome.plist");
-      const extensionManager = createExtensionManager(fakePaths);
+      const extensionManager = createExtensionManager(
+        fakePaths,
+        new CommandExecutor()
+      );
       await extensionManager.enableExtension(id, true);
       // Convert to JSON
       const cmd = `plutil -convert json ${policiesFile}`;
@@ -123,7 +140,10 @@ test("enableExtension()", async () => {
     }
     case "linux": {
       const policiesFile = path.join(folder, "com.google.Chrome.plist");
-      const extensionManager = createExtensionManager(fakePaths);
+      const extensionManager = createExtensionManager(
+        fakePaths,
+        new CommandExecutor()
+      );
       await extensionManager.enableExtension(id, true);
 
       // Read and check

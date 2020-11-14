@@ -2,7 +2,6 @@ const _fs = require("fs");
 const path = require("path");
 const fs = _fs.promises;
 const ExtensionManager = require("./extensionManager");
-const ElevatedCommandExecutor = require("../../util/elevatedCommandExecutor");
 
 class LinuxExtensionManager extends ExtensionManager {
   async _getPolicyFileWithExtension(files, extensionId) {
@@ -104,7 +103,7 @@ class LinuxExtensionManager extends ExtensionManager {
         ? policyFileWithExtension
         : path.join(this._policiesDir, "managed", "chrome-ext-manager.json")
     }`;
-    const cmdExecutor = new ElevatedCommandExecutor();
+    const cmdExecutor = this._commandExecutor;
     return cmdExecutor.execute(cmd);
   }
 
@@ -124,7 +123,7 @@ class LinuxExtensionManager extends ExtensionManager {
     const cmd = `echo '${JSON.stringify(
       policyFileContents
     )}' > ${policyFileWithExtension}`;
-    const cmdExecutor = new ElevatedCommandExecutor();
+    const cmdExecutor = this._commandExecutor;
     return cmdExecutor.execute(cmd);
   }
 }
