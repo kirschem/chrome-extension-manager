@@ -139,7 +139,7 @@ test("enableExtension()", async () => {
       break;
     }
     case "linux": {
-      const policiesFile = path.join(folder, "com.google.Chrome.plist");
+      const policiesFile = path.join(folder, "managed", "fake-policy.json");
       const extensionManager = createExtensionManager(
         fakePaths,
         new CommandExecutor()
