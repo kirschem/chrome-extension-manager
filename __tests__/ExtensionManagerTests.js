@@ -3,6 +3,7 @@ const executeCommand = require("../util/executeCommand");
 // Evelated execution does not work inside the build pipeline
 const CommandExecutor = require("../util/commandExecutor");
 const fs = require("fs-extra");
+const mergeJsonInFolder = require("../util/jsonMerge");
 const path = require("path");
 const fakePaths = {
   win32: {
@@ -93,7 +94,6 @@ test("disableExtension()", async () => {
       break;
     }
     case "linux": {
-      const policiesFile = path.join(folder, "managed", "fake-policy.json");
       const extensionManager = createExtensionManager(
         fakePaths,
         new CommandExecutor()
@@ -101,12 +101,12 @@ test("disableExtension()", async () => {
       await extensionManager.disableExtension(id, true);
 
       // Read and check
-      const newPoliciesFile = await fs.readFile(policiesFile).then(JSON.parse);
-      const value =
-        newPoliciesFile["ExtensionSettings"][id]["installation_mode"];
+      const pathWithPolicies = path.join(folder, "managed");
+      const allPolicies = mergeJsonInFolder(pathWithPolicies);
+      const value = allPolicies["ExtensionSettings"][id]["installation_mode"];
       expect(value).toBe("blocked");
       // Ensure other contents remain untouched
-      expect(newPoliciesFile["DoNot"]).toBe("Touch");
+      expect(allPolicies["DoNot"]).toBe("Touch");
       break;
     }
     default:
@@ -139,7 +139,6 @@ test("enableExtension()", async () => {
       break;
     }
     case "linux": {
-      const policiesFile = path.join(folder, "managed", "fake-policy.json");
       const extensionManager = createExtensionManager(
         fakePaths,
         new CommandExecutor()
@@ -147,12 +146,12 @@ test("enableExtension()", async () => {
       await extensionManager.enableExtension(id, true);
 
       // Read and check
-      const newPoliciesFile = await fs.readFile(policiesFile).then(JSON.parse);
-      const value =
-        newPoliciesFile["ExtensionSettings"][id]["installation_mode"];
+      const pathWithPolicies = path.join(folder, "managed");
+      const allPolicies = mergeJsonInFolder(pathWithPolicies);
+      const value = allPolicies["ExtensionSettings"][id]["installation_mode"];
       expect(value).toBe("allowed");
       // Ensure other contents remain untouched
-      expect(newPoliciesFile["DoNot"]).toBe("Touch");
+      expect(allPolicies["DoNot"]).toBe("Touch");
       break;
     }
     default:

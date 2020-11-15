@@ -6,6 +6,7 @@
   "scripts": {
     "start": "electron .",
     "test": "node --harmony ./node_modules/jest/bin/jest.js --runInBand --detectOpenHandles",
+    "test-linux": "docker run --rm -it $(docker build -q --file ./Dockerfile.linux .)",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "postinstall": "electron-builder install-app-deps"
@@ -39,6 +40,7 @@
   },
   "dependencies": {
     "jquery": "^3.5.0",
+    "lodash": "^4.17.20",
     "open": "^7.0.3",
     "sudo-prompt": "^9.2.1"
   }

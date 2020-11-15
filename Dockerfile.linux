@@ -1,0 +1,6 @@
+FROM node:12-alpine
+
+COPY . /tmp/app/
+WORKDIR /tmp/app/
+RUN npm install
+CMD ["npm", "run", "test"]
