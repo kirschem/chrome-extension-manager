@@ -9,6 +9,7 @@
     "test-linux": "docker run --rm -it $(docker build -q --file ./Dockerfile.linux .)",
     "pack": "electron-builder --dir -c.mac.identity=null",
     "dist": "electron-builder -c.mac.identity=null",
+    "dist-linux": "electron-builder --linux",
     "postinstall": "electron-builder install-app-deps"
   },
   "repository": "https://github.com/kirschem/chrome-extension-manager",
