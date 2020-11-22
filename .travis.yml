@@ -57,3 +57,4 @@ deploy:
     - "dist/*.exe"
   cleanup: false
   draft: true
+  overwrite: true
