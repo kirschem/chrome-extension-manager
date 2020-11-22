@@ -1,6 +1,8 @@
-sudo: required
+branches:
+  except:
+    - "/^v\\d+\\.\\d+\\.\\d+$/"
 
-matrix:
+jobs:
   include:
     - os: osx
       osx_image: xcode10.2
@@ -36,17 +38,17 @@ script:
     else
       npm test && travis_retry npm run dist
     fi
+
 before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
 
-branches:
-  except:
-    - "/^v\\d+\\.\\d+\\.\\d+$/"
+before_deploy:
+  - ls -alh
 
 deploy:
   provider: releases
   api_key: $GH_TOKEN
   file_glob: true
   file: "{dist/*.dmg, dist/*.AppImage, dist/*.exe}"
-  skip_cleanup: true
+  cleanup: false
   draft: true
