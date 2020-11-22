@@ -42,8 +42,8 @@ script:
 before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
 
-# before_deploy:
-#   - ls -alh
+before_deploy:
+  - ls -alh
 
 deploy:
   provider: releases
