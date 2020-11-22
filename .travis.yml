@@ -49,6 +49,7 @@ deploy:
   on:
     branch: master
   provider: releases
+  edge: true
   token: $GH_TOKEN
   file_glob: true
   file:
