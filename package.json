@@ -10,6 +10,7 @@
     "pack": "electron-builder --dir -c.mac.identity=null",
     "dist": "electron-builder -c.mac.identity=null",
     "dist-linux": "electron-builder --linux",
+    "dist-win": "electron-builder --win",
     "postinstall": "electron-builder install-app-deps"
   },
   "repository": "https://github.com/kirschem/chrome-extension-manager",

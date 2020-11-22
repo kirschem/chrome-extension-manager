@@ -44,6 +44,6 @@ deploy:
   provider: releases
   api_key: $GH_TOKEN
   file_glob: true
-  file: "{dist/*.dmg, dist/*.AppImage}"
+  file: "{dist/*.dmg, dist/*.AppImage, dist/*.exe}"
   skip_cleanup: true
   draft: true
