@@ -36,7 +36,7 @@ script:
         electronuserland/builder:wine \
         /bin/bash -c "npm install && npm test && npm run dist -- --linux --win"
     else
-      npm test && travis_retry npm run dist
+      npm test && npm run dist
     fi
 
 before_cache:
@@ -46,6 +46,8 @@ before_deploy:
   - ls -alh dist
 
 deploy:
+  on:
+    branch: master
   provider: releases
   token: $GH_TOKEN
   file_glob: true
