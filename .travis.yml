@@ -10,22 +10,22 @@ jobs:
       language: node_js
       node_js: "12"
       env:
-        - ELECTRON_CACHE=$HOME/.cache/electron
-        - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+        - ELECTRON_CACHE=".cache/electron"
+        - ELECTRON_BUILDER_CACHE=".cache/electron-builder"
 
     - os: linux
       arch: amd64
       env:
-        - ELECTRON_CACHE=$HOME/.cache/electron
-        - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+        - ELECTRON_CACHE=".cache/electron"
+        - ELECTRON_BUILDER_CACHE=".cache/electron-builder"
       services: docker
       language: generic
 
 cache:
   directories:
     - node_modules
-    - $HOME/.cache/electron
-    - $HOME/.cache/electron-builder
+    - .cache/electron
+    - .cache/electron-builder
 
 script:
   - |
@@ -33,8 +33,6 @@ script:
       docker run --rm \
         --env-file <(env | grep -vE '\r|\n' | grep -iE 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS_TAG|TRAVIS|TRAVIS_REPO_|TRAVIS_BUILD_|TRAVIS_BRANCH|TRAVIS_PULL_REQUEST_|APPVEYOR_|CSC_|GH_|GITHUB_|BT_|AWS_|STRIP|BUILD_') \
         -v ${PWD}:/project \
-        -v ~/.cache/electron:/root/.cache/electron \
-        -v ~/.cache/electron-builder:/root/.cache/electron-builder \
         electronuserland/builder:wine \
         /bin/bash -c "npm install && npm test && npm run dist -- --linux --win"
     else
@@ -42,7 +40,7 @@ script:
     fi
 
 before_cache:
-  - rm -rf $HOME/.cache/electron-builder/wine
+  - rm -rf .cache/electron-builder/wine
 
 before_deploy:
   - ls -alh dist
