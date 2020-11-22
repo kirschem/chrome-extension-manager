@@ -7,8 +7,8 @@
     "start": "electron .",
     "test": "node --harmony ./node_modules/jest/bin/jest.js --runInBand --detectOpenHandles",
     "test-linux": "docker run --rm -it $(docker build -q --file ./Dockerfile.linux .)",
-    "pack": "electron-builder --dir -c.mac.identity=null",
-    "dist": "electron-builder -c.mac.identity=null",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder --x64",
     "dist-linux": "electron-builder --linux",
     "dist-win": "electron-builder --win",
     "postinstall": "electron-builder install-app-deps"
@@ -16,15 +16,18 @@
   "repository": "https://github.com/kirschem/chrome-extension-manager",
   "build": {
     "appId": "com.marcelkirsche.chrome-extension-manager",
-    "productName": "Chrome Extension Manager"
-  },
-  "win": {
-    "portable": true
-  },
-  "mac": {
-    "identity": "null",
-    "target": "dmg",
-    "category": "public.app-category.utilities"
+    "productName": "Chrome Extension Manager",
+    "win": {
+      "target": "portable"
+    },
+    "linux": {
+      "category": "Utility"
+    },
+    "mac": {
+      "identity": "null",
+      "target": "dmg",
+      "category": "public.app-category.utilities"
+    }
   },
   "keywords": [
     "disable",
