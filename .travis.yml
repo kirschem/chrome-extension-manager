@@ -43,12 +43,13 @@ before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
 
 before_deploy:
-  - ls -alh
+  - ls -alh dist
 
 deploy:
   provider: releases
-  api_key: $GH_TOKEN
+  token: $GH_TOKEN
   file_glob: true
   file: "{dist/*.dmg, dist/*.AppImage, dist/*.exe}"
   cleanup: false
+  skip_cleanup: true
   draft: true
