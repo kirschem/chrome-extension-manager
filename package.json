@@ -17,7 +17,7 @@
   "build": {
     "appId": "com.marcelkirsche.chrome-extension-manager",
     "productName": "Chrome Extension Manager",
-    "artifactName": "${name}-${version}_${arch}.${ext}",
+    "artifactName": "${name}-${version}.${ext}",
     "win": {
       "target": "portable"
     },
