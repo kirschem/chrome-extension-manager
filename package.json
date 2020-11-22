@@ -24,7 +24,7 @@
       "category": "Utility"
     },
     "mac": {
-      "identity": "null",
+      "identity": null,
       "target": "dmg",
       "category": "public.app-category.utilities"
     }
