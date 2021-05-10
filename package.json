@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "jquery": "^3.5.0",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "open": "^7.0.3",
     "sudo-prompt": "^9.2.1"
   }
